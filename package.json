@@ -1,0 +1,33 @@
+{
+  "name": "Property-Financials",
+  "version": "1.0.0",
+  "description": "Interactive real estate property financial calculator",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "lint": "eslint src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dfb5865/property-financials.git"
+  },
+  "author": "Zillow Group, Inc.",
+  "license": "ALL RIGHTS RESERVED",
+  "bugs": {
+    "url": "https://github.com/dfb5865/property-financials/issues"
+  },
+  "homepage": "https://github.com/dfb5865/property-financials",
+  "devDependencies": {
+    "babel-core": "^5.4.7",
+    "babel-eslint": "^3.1.9",
+    "babel-loader": "^5.1.2",
+    "eslint-plugin-react": "^2.3.0",
+    "react-hot-loader": "^1.2.7",
+    "webpack": "^1.9.6",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "dependencies": {
+    "react": "^0.13.0"
+  }
+}
