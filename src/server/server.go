@@ -2,35 +2,48 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"regexp"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/API/seed-data/{url}", GetSeedData)
+	router.HandleFunc("/API/property", GetSeedData).Queries("url", "")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func GetSeedData(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	url := "http://" + vars["url"]
+	params := r.URL.Query()
+	url := params.Get("url")
 	fmt.Fprintln(w, "request url:", url)
 
-	req, err := http.NewRequest("GET", url, nil)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	doc, err := goquery.NewDocument(url)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
 
-	fmt.Fprintln(w, "response status:", resp.Status)
-	fmt.Fprintln(w, "response body:", string(body))
+	doc.Find(".zsg-content-header.addr h1").Each(func(_ int, child *goquery.Selection) {
+		text := child.Text()
+		fmt.Fprintln(w, "Address:", text)
+	})
+
+	doc.Find(".main-row.home-summary-row").Each(func(_ int, child *goquery.Selection) {
+		text := child.Text()
+		fmt.Fprintln(w, "Price:", text)
+	})
+
+	hoaRegex := regexp.MustCompile(`(?i)hoa fee: \$[0-9]*\/mo`)
+
+	doc.Find(".fact-group-container.zsg-content-component.top-facts").Each(func(_ int, child *goquery.Selection) {
+		text := child.Text()
+		if hoaRegex.MatchString(text) {
+			fmt.Fprintln(w, "HOA:", hoaRegex.FindStringSubmatch(text))
+		}
+	})
+
 }
