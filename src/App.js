@@ -98,6 +98,11 @@ export default class App extends Component {
     var denominator = Math.pow(1 + i, n) - 1;
     var mortgagePayment = loanAmount * (numerator / denominator);
 
+    // # Gross Schedule Rents
+    // ----------------------
+    var monthlyVacancy = this.state.monthlyRent * (this.state.vacancyPercent / 100);
+    var effectiveGrossIncome = this.state.monthlyRent - monthlyVacancy;
+
     // # Output
     // --------
     return (
@@ -222,6 +227,22 @@ export default class App extends Component {
             <tr>
               <td>Mortgage Payment</td>
               <td>{mortgagePayment.toLocaleString('en-US', currency)}</td>
+            </tr>
+          </table>
+
+          <h2>Gross Schedule Rents</h2>
+          <table>
+            <tr>
+              <td>Rent</td>
+              <td>{this.state.monthlyRent.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Vacancy</td>
+              <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Effective Gross Income</td>
+              <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
             </tr>
           </table>
         </div>
