@@ -91,7 +91,15 @@ export default class App extends Component {
 
     // # Debt Service
     // --------------
+    var i = this.state.interestRate / 12 / 100;
+    var n = this.state.amortization * 12;
 
+    var numerator = i * Math.pow(1 + i, n);
+    var denominator = Math.pow(1 + i, n) - 1;
+    var mortgagePayment = loanAmount * (numerator / denominator);
+
+    // # Output
+    // --------
     return (
       <div className="table">
         <div className="table-cell">
@@ -180,10 +188,6 @@ export default class App extends Component {
               <td>{downPayment.toLocaleString('en-US', currency)}</td>
             </tr>
             <tr>
-              <td>Loan Amount</td>
-              <td>{loanAmount.toLocaleString('en-US', currency)}</td>
-            </tr>
-            <tr>
               <td>Closing Cost Percentage</td>
               <td>{closingCostPercentage}</td>
             </tr>
@@ -198,6 +202,26 @@ export default class App extends Component {
             <tr>
               <td><strong>Investment Capital Needed</strong></td>
               <td>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</td>
+            </tr>
+          </table>
+
+          <h2>Debt Service</h2>
+          <table>
+            <tr>
+              <td>Loan Amount</td>
+              <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Interest Rate</td>
+              <td>{this.state.interestRate}%</td>
+            </tr>
+            <tr>
+              <td>Amortization</td>
+              <td>{this.state.amortization}</td>
+            </tr>
+            <tr>
+              <td>Mortgage Payment</td>
+              <td>{mortgagePayment.toLocaleString('en-US', currency)}</td>
             </tr>
           </table>
         </div>
