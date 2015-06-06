@@ -111,6 +111,11 @@ export default class App extends Component {
     var leasingFee = (this.state.monthlyRent / 18) * (this.state.propertyManagementLeasingFee / 100);
     var totalMonthlyExpenses = this.state.monthlyTaxes + this.state.monthlyLandlordInsurance + monthlyMaintenance + managementFee + leasingFee + this.state.monthlyHoaFee + this.state.monthlyUtilities + this.state.monthlyLandscaping;
 
+    // # Net Operating Income
+    // ----------------------
+    var cashFlowBeforeMortage = effectiveGrossIncome - mortgagePayment - totalMonthlyExpenses;
+    var cashFlowAfterMortgage = effectiveGrossIncome - totalMonthlyExpenses;
+
     // # Output
     // --------
     return (
@@ -308,6 +313,31 @@ export default class App extends Component {
             <tr>
               <td><strong>Total Expenses</strong></td>
               <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
+            </tr>
+          </table>
+
+
+          <h2>Net Operating Income</h2>
+          <table>
+            <tr>
+              <td>Effective Gross Income</td>
+              <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Mortgage Payment</td>
+              <td>{mortgagePayment.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Total Expenses</td>
+              <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
+              <td><strong>{cashFlowBeforeMortage.toLocaleString('en-US', currency)}</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Monthly Cash Flow After Mortgage is Paid Off</strong></td>
+              <td><strong>{cashFlowAfterMortgage.toLocaleString('en-US', currency)}</strong></td>
             </tr>
           </table>
         </div>
