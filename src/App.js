@@ -4,20 +4,24 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // overview
+      // Overview
+      // ========
       purchasePrice: 89000,
-      downPaymentPercent: 20,
+      downPaymentPercent: 25,
       rehabCost: 0,
 
-      // debt service
+      // Debt Service
+      // ============
       interestRate: 4.375,
       amortization: 30,
 
-      // gross schedule rents
+      // Gross Schedule Rents
+      // ====================
       monthlyRent: 1050,
       vacancyPercent: 13,
 
-      // operating expenses
+      // Operating Expenses
+      // ==================
       monthlyTaxes: 89,
       monthlyLandlordInsurance: 112,
       monthlyHoaFee: 0,
@@ -26,13 +30,16 @@ export default class App extends Component {
       maintenanceFeePercentage: 13,
       managementFeePercentage: 8,
 
-      // net operating income
+      // Net Operating Income
+      // ====================
       yearsHeldToCalculateCashFlow: 15,
 
-      // return on investment
+      // Return on Investment
+      // ====================
       yearsOwned: 15,
 
-      // cash reserves
+      // Cash Reserves
+      // =============
       monthsOfCashReserves: 6
     };
   }
@@ -45,49 +52,45 @@ export default class App extends Component {
 
   render() {
     // # Configuration
-    var currency = { style: 'currency', currency: 'USD' };
+    // ---------------
+    var currency = { style: 'currency', currency: 'USD', maximumFractionDigits: 0};
 
     // # Overview
+    // ----------
     var downPayment = (this.state.purchasePrice * (this.state.downPaymentPercent / 100));
 
-    var purchasePrice = this.state.purchasePrice;
+    var loanAmount = this.state.purchasePrice - downPayment;
     var closingCostPercentage = 0;
-    if(purchasePrice <= 75000) {
+    if(loanAmount <= 75000) {
       closingCostPercentage = 7;
     }
-    if(purchasePrice > 75000 && purchasePrice <= 87500) {
-      console.log(1);
+    if(loanAmount > 75000 && loanAmount <= 87500) {
       closingCostPercentage = 6.5
     }
-    if(purchasePrice > 87500 && purchasePrice <= 100000) {
-      console.log(2);
+    if(loanAmount > 87500 && loanAmount <= 100000) {
       closingCostPercentage = 6;
     }
-    if(purchasePrice > 100000 && purchasePrice <= 112500) {
-      console.log(3);
+    if(loanAmount > 100000 && loanAmount <= 112500) {
       closingCostPercentage = 5.5;
     }
-    if(purchasePrice > 112500 && purchasePrice <= 125000) {
-      console.log(4);
+    if(loanAmount > 112500 && loanAmount <= 125000) {
       closingCostPercentage = 5;
     }
-    if(purchasePrice > 125000 && purchasePrice <= 137500) {
-      console.log(5);
+    if(loanAmount > 125000 && loanAmount <= 137500) {
       closingCostPercentage = 4.5
     }
-    if(purchasePrice > 137500 && purchasePrice <= 300000) {
-      console.log(6);
+    if(loanAmount > 137500 && loanAmount <= 300000) {
       closingCostPercentage = 4;
     }
-    if(purchasePrice > 300000) {
-      console.log(7);
+    if(loanAmount > 300000) {
       closingCostPercentage = 3.5
     }
 
-    var loanAmount = this.state.purchasePrice - downPayment;
     var closingCost = loanAmount * (closingCostPercentage / 100);
-
     var investmentCapitalNeeded = downPayment + this.state.rehabCost + closingCost;
+
+    // # Debt Service
+    // --------------
 
     return (
       <div className="table">
@@ -166,33 +169,37 @@ export default class App extends Component {
           </form>
         </div>
         <div className="table-cell">
-          <form>
-            <h2>Overview</h2>
-            <div>
-              <label>Purchase Price</label>
-              <input type="text" value={this.state.purchasePrice.toLocaleString('en-US', currency)} disabled/>
-            </div>
-            <div>
-              <label>Down Payment</label>
-              <input type="text" value={downPayment.toLocaleString('en-US', currency)} disabled/>
-            </div>
-            <div>
-              <label>Loan Amount</label>
-              <input type="text" value={loanAmount.toLocaleString('en-US', currency)} disabled/>
-            </div>
-            <div>
-              <label>Rehab Cost</label>
-              <input type="text" value={this.state.rehabCost.toLocaleString('en-US', currency)} disabled/>
-            </div>
-            <div>
-              <label>Closing Cost</label>
-              <input type="text" value={closingCost.toLocaleString('en-US', currency)} disabled/>
-            </div>
-            <div>
-              <label><strong>Investment Capital Needed</strong></label>
-              <input type="text" value={investmentCapitalNeeded.toLocaleString('en-US', currency)} disabled/>
-            </div>
-          </form>
+          <h2>Overview</h2>
+          <table>
+            <tr>
+              <td>Purchase Price</td>
+              <td>{this.state.purchasePrice.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Down Payment</td>
+              <td>{downPayment.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Loan Amount</td>
+              <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Closing Cost Percentage</td>
+              <td>{closingCostPercentage}</td>
+            </tr>
+            <tr>
+              <td>Rehab Cost</td>
+              <td>{this.state.rehabCost.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Closing Costs</td>
+              <td>{closingCost.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td><strong>Investment Capital Needed</strong></td>
+              <td>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</td>
+            </tr>
+          </table>
         </div>
       </div>
     );
