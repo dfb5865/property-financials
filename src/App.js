@@ -27,8 +27,9 @@ export default class App extends Component {
       monthlyHoaFee: 0,
       monthlyUtilities: 0,
       monthlyLandscaping: 0,
-      maintenanceFeePercentage: 13,
+      maintenancePercentage: 13,
       managementFeePercentage: 8,
+      propertyManagementLeasingFee: 50, // n% of 1 months rent
 
       // Net Operating Income
       // ====================
@@ -103,12 +104,20 @@ export default class App extends Component {
     var monthlyVacancy = this.state.monthlyRent * (this.state.vacancyPercent / 100);
     var effectiveGrossIncome = this.state.monthlyRent - monthlyVacancy;
 
+    // # Operating Expenses
+    // --------------------
+    var monthlyMaintenance = this.state.monthlyRent * (this.state.maintenancePercentage / 100);
+    var managementFee = (this.state.monthlyRent - monthlyVacancy) * (this.state.managementFeePercentage / 100);
+    var leasingFee = (this.state.monthlyRent / 18) * (this.state.propertyManagementLeasingFee / 100);
+    var totalMonthlyExpenses = this.state.monthlyTaxes + this.state.monthlyLandlordInsurance + monthlyMaintenance + managementFee + leasingFee + this.state.monthlyHoaFee + this.state.monthlyUtilities + this.state.monthlyLandscaping;
+
     // # Output
     // --------
     return (
       <div className="table">
         <div className="table-cell">
           <form>
+            <strong>Overview</strong>
             <div>
               <label htmlFor="purchasePrice">Purchase Price</label>
               <input id="purchasePrice" type="number" onChange={this.handleChange.bind(this).bind(this)} value={this.state.purchasePrice} min="0" />
@@ -116,7 +125,7 @@ export default class App extends Component {
 
             <div>
               <label htmlFor="downPaymentPercent">Down Payment</label>
-              <input id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0"/>%
+              <input id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100"/>
             </div>
 
             <div>
@@ -124,9 +133,10 @@ export default class App extends Component {
               <input id="rehabCost" type="number" onChange={this.handleChange.bind(this)} value={this.state.rehabCost} min="0"/>
             </div>
 
+            <strong>Debt Service</strong>
             <div>
               <label htmlFor="interestRate">Interest Rate</label>
-              <input id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0"/>
+              <input id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0" max="100"/>
             </div>
 
             <div>
@@ -134,13 +144,18 @@ export default class App extends Component {
               <input id="amortization" type="number" onChange={this.handleChange.bind(this)} value={this.state.amortization} min="0"/>
             </div>
 
-            <hr />
-
+            <strong>Debt Service</strong>
             <div>
               <label htmlFor="monthlyRent">Monthly Rent</label>
               <input id="monthlyRent" type="number" onChange={this.handleChange.bind(this)} value={this.state.monthlyRent} min="0"/>
             </div>
 
+            <div>
+              <label htmlFor="vacancyPercent">Monthly Avg. Vacancy</label>
+              <input id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100"/>
+            </div>
+
+            <strong>Operating Expenses</strong>
             <div>
               <label htmlFor="monthlyTaxes">Monthly Taxes</label>
               <input id="monthlyTaxes" type="number" onChange={this.handleChange.bind(this)} value={this.state.monthlyTaxes} min="0"/>
@@ -149,6 +164,16 @@ export default class App extends Component {
             <div>
               <label htmlFor="monthlyLandlordInsurance">Monthly Landlord Insurance</label>
               <input id="monthlyLandlordInsurance" type="number" onChange={this.handleChange.bind(this)} value={this.state.monthlyLandlordInsurance} min="0"/>
+            </div>
+
+            <div>
+              <label htmlFor="maintenancePercentage">Monthly Avg. Maintenance</label>
+              <input id="maintenancePercentage" type="number" onChange={this.handleChange.bind(this)} value={this.state.maintenancePercentage} min="0" max="100"/>
+            </div>
+
+            <div>
+              <label htmlFor="propertyManagementLeasingFee">Leasing Fee Percentage</label>
+              <input id="propertyManagementLeasingFee" type="number" onChange={this.handleChange.bind(this)} value={this.state.propertyManagementLeasingFee} min="0" max="100"/>
             </div>
 
             <div>
@@ -193,6 +218,10 @@ export default class App extends Component {
               <td>{downPayment.toLocaleString('en-US', currency)}</td>
             </tr>
             <tr>
+              <td>Loan Amount</td>
+              <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
               <td>Closing Cost Percentage</td>
               <td>{closingCostPercentage}</td>
             </tr>
@@ -206,16 +235,12 @@ export default class App extends Component {
             </tr>
             <tr>
               <td><strong>Investment Capital Needed</strong></td>
-              <td>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</td>
+              <td><strong>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</strong></td>
             </tr>
           </table>
 
           <h2>Debt Service</h2>
           <table>
-            <tr>
-              <td>Loan Amount</td>
-              <td>{loanAmount.toLocaleString('en-US', currency)}</td>
-            </tr>
             <tr>
               <td>Interest Rate</td>
               <td>{this.state.interestRate}%</td>
@@ -225,8 +250,8 @@ export default class App extends Component {
               <td>{this.state.amortization}</td>
             </tr>
             <tr>
-              <td>Mortgage Payment</td>
-              <td>{mortgagePayment.toLocaleString('en-US', currency)}</td>
+              <td><strong>Mortgage Payment</strong></td>
+              <td><strong>{mortgagePayment.toLocaleString('en-US', currency)}</strong></td>
             </tr>
           </table>
 
@@ -241,8 +266,48 @@ export default class App extends Component {
               <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
             </tr>
             <tr>
-              <td>Effective Gross Income</td>
-              <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
+              <td><strong>Effective Gross Income</strong></td>
+              <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
+            </tr>
+          </table>
+
+          <h2>Operating Expenses</h2>
+          <table>
+            <tr>
+              <td>Taxes</td>
+              <td>{this.state.monthlyTaxes.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Insurance</td>
+              <td>{this.state.monthlyLandlordInsurance.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Maintenance</td>
+              <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Management Fee</td>
+              <td>{managementFee.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Leasing Fee</td>
+              <td>{leasingFee.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>HOA Fee</td>
+              <td>{this.state.monthlyHoaFee.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Utilities</td>
+              <td>{this.state.monthlyUtilities.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td>Landscaping</td>
+              <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
+            </tr>
+            <tr>
+              <td><strong>Total Expenses</strong></td>
+              <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
             </tr>
           </table>
         </div>
