@@ -1,7 +1,7 @@
 Property Financials Calculator
 ==============================
 
-Visit http://example.com to play with the calculator!
+Visit http://isthispropertyagoodinvestment.com to play with the calculator!
 
 Development
 -----------
