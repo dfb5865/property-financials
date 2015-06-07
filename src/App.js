@@ -98,7 +98,7 @@ export default class App extends Component {
 
     var numerator = i * Math.pow(1 + i, n);
     var denominator = Math.pow(1 + i, n) - 1;
-    var mortgagePayment = loanAmount * (numerator / denominator);
+    var monthlyMortgagePayment = loanAmount * (numerator / denominator);
 
     // # Gross Schedule Rents
     // ----------------------
@@ -114,7 +114,7 @@ export default class App extends Component {
 
     // # Net Operating Income
     // ----------------------
-    var cashFlowBeforeMortage = effectiveGrossIncome - mortgagePayment - totalMonthlyExpenses;
+    var cashFlowBeforeMortage = effectiveGrossIncome - monthlyMortgagePayment - totalMonthlyExpenses;
     var cashFlowAfterMortgage = effectiveGrossIncome - totalMonthlyExpenses;
 
     // # Return On Investment
@@ -137,7 +137,7 @@ export default class App extends Component {
     // principalPaydown
     var interestRateForPaydown = this.state.interestRate / 12 / 100;
     var length = Math.min(this.state.yearsOwned, this.state.amortization);
-    var principalPaydown = (loanAmount - (mortgagePayment / interestRateForPaydown)) * (1 - Math.pow(1 + interestRateForPaydown, length * 12));
+    var principalPaydown = (loanAmount - (monthlyMortgagePayment / interestRateForPaydown)) * (1 - Math.pow(1 + interestRateForPaydown, length * 12));
 
     // sellingExpenses
     var sellingExpenses = 0.09 * (this.state.purchasePrice + appreciation);
@@ -150,6 +150,14 @@ export default class App extends Component {
 
     // annualReturnOnInvestment
     var annualReturnOnInvestment = 100 * (totalProjectedProfit / investmentCapitalNeeded / this.state.yearsOwned);
+
+    // # Tax Benefits
+    // ----------------------
+    var annualDepreciation = (this.state.purchasePrice * 0.8) / 27.5;
+
+    // # Return On Investment
+    // ----------------------
+    var cashReserves = Math.max(this.state.monthsOfCashReserves * (totalMonthlyExpenses + monthlyMortgagePayment - managementFee) , 3500);
 
     // # Output
     // --------
@@ -294,7 +302,7 @@ export default class App extends Component {
             </tr>
             <tr>
               <td><strong>Mortgage Payment</strong></td>
-              <td><strong>{mortgagePayment}</strong></td>
+              <td><strong>{monthlyMortgagePayment}</strong></td>
             </tr>
           </table>
 
@@ -363,7 +371,7 @@ export default class App extends Component {
             </tr>
             <tr>
               <td>Mortgage Payment</td>
-              <td>{mortgagePayment}</td>
+              <td>{monthlyMortgagePayment}</td>
             </tr>
             <tr>
               <td>Total Expenses</td>
@@ -428,6 +436,22 @@ export default class App extends Component {
             <tr>
               <td>Annual Return on Investment</td>
               <td>{annualReturnOnInvestment}%</td>
+            </tr>
+          </table>
+
+          <h2>Tax Benefits</h2>
+          <table>
+            <tr>
+              <td>Annual Depreciation</td>
+              <td>{annualDepreciation}</td>
+            </tr>
+          </table>
+
+          <h2>Cash Reserves</h2>
+          <table>
+            <tr>
+              <td>Cash Reserves</td>
+              <td>{cashReserves}</td>
             </tr>
           </table>
         </div>
