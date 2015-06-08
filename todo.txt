@@ -1,0 +1,39 @@
+api:
+- find out the annual appreciation percentage.
+
+ui:
+- explain how the closing costs are calculated
+- integrate dropdown of real interest rate's from zillow's partners
+- show local property management numbers/websites (for management fee)
+  - user can call to get accurate management fee
+  - user can call to get accurate leasing fee
+- show hoa number if needed, so they can call and get the hoa fee
+- show when assumptions are being made
+
+research:
+- how are closing costs calculated? is marshall reddick right?
+- how is vacancy calculated? does it depend on the area?
+- how can we get better data for taxes and insurance?
+- how is maintenance calculated?
+- average duration of renters lease in a specific market
+- annual appreciation based the Class of a property
+- how long is a property new construction
+- what is principal paydown?
+- how to calculate selling expenses?
+- tax benefits/annual depreciation
+
+calculations:
+- cash flow while property is new construction. is it lower than normal or something?
+- add annual rate of increase for rent and non-mortgage expenses
+
+
+features:
+- add link to http://www.zillow.com/mortgage-rates/?auto=true&value=99900&zip=33971
+- add support for ARM mortgage
+- add current homeowner information
+  - automatically search county records http://www.leepa.org/Search/PropertySearch.aspx
+- add documents section
+  - http://fieldcards.leepa.org/CostCard/Folio/10323051
+- add Table 1-1 from Real Estate Investing for Dummies
+
+- show a list of markets/neighborhoods that are in the path of progress

@@ -38,7 +38,7 @@ export default class App extends Component {
       // Return on Investment
       // ====================
       annualAppreciation: 4,
-      yearsOwned: 1,
+      yearsOwned: 15,
 
       // Cash Reserves
       // =============
@@ -273,12 +273,12 @@ export default class App extends Component {
               <td>{loanAmount}</td>
             </tr>
             <tr>
-              <td>Closing Cost Percentage</td>
-              <td>{closingCostPercentage}</td>
-            </tr>
-            <tr>
               <td>Rehab Cost</td>
               <td>{this.state.rehabCost}</td>
+            </tr>
+            <tr>
+              <td>Closing Cost Percentage</td>
+              <td>{closingCostPercentage}</td>
             </tr>
             <tr>
               <td>Closing Costs</td>
@@ -292,6 +292,10 @@ export default class App extends Component {
 
           <h2>Debt Service</h2>
           <table>
+            <tr>
+              <td>Loan Amount</td>
+              <td>{loanAmount}</td>
+            </tr>
             <tr>
               <td>Interest Rate</td>
               <td>{this.state.interestRate}%</td>
