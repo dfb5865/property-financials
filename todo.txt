@@ -1,3 +1,8 @@
+- add bootstrap
+- setup proper html layout
+- make look pretty
+- integrate with actual api
+
 api:
 - find out the annual appreciation percentage.
 
