@@ -52,6 +52,29 @@ export default class App extends Component {
     this.setState(state);
   }
 
+  loadProperty(event) {
+    console.log(event);
+    event.preventDefault();
+    var self = this;
+    // validate the url
+    try {
+      var url = new URL(React.findDOMNode(self.refs.propertyUrl).value);
+      fetch("http://propertyfinancialsa-env.elasticbeanstalk.com/api/property?url=" + url).then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        console.log(json);
+        self.setState({
+          purchasePrice: json.Price,
+          monthlyHoaFee: json.HoaFee,
+          monthlyTaxes: json.Tax
+        })
+      });
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
+
   render() {
     // # Configuration
     // ---------------
@@ -163,10 +186,27 @@ export default class App extends Component {
     // --------
     return (
       <div className="container-fluid">
+        <header>
+
+          <form onSubmit={this.loadProperty.bind(this)}>
+          <div className="row">
+            <div className="col-lg-3" />
+            <div className="col-lg-6">
+              <div className="input-group">
+                <input ref="propertyUrl" type="text" className="form-control" placeholder="http://www.zillow.com/homes/624-vamderlyn-lane-slingerlands-ny_rb/" />
+                <span className="input-group-btn">
+                  <button className="btn btn-success" type="submit">Get Financials</button>
+                </span>
+              </div>
+            </div>
+            <div className="col-lg-3" />
+          </div>
+          </form>
+
+        </header>
         <div className="row">
           <div className="col-xs-3 inverse-bg">
           <div className="center-block logo">
-            <img src="/assets/logo.png" width="80" height="80" />
           </div>
             <form className="form-horizontal">
               <div className="form-group">
@@ -344,207 +384,223 @@ export default class App extends Component {
               </div>
             </form>
           </div>
-          <div className="col-xs-9">
+          <div className="col-xs-9 light-bg">
             <h2>Overview</h2>
-            <table>
-              <tr>
-                <td>Purchase Price</td>
-                <td>{this.state.purchasePrice.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Down Payment</td>
-                <td>{downPayment.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Loan Amount</td>
-                <td>{loanAmount.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Rehab Cost</td>
-                <td>{this.state.rehabCost.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Closing Cost Percentage</td>
-                <td>{closingCostPercentage}%</td>
-              </tr>
-              <tr>
-                <td>Closing Costs</td>
-                <td>{closingCost.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td><strong>Investment Capital Needed</strong></td>
-                <td><strong>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Purchase Price</td>
+                  <td>{this.state.purchasePrice.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Down Payment</td>
+                  <td>{downPayment.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Loan Amount</td>
+                  <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Rehab Cost</td>
+                  <td>{this.state.rehabCost.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Closing Cost Percentage</td>
+                  <td>{closingCostPercentage}%</td>
+                </tr>
+                <tr>
+                  <td>Closing Costs</td>
+                  <td>{closingCost.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Investment Capital Needed</strong></td>
+                  <td><strong>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Debt Service</h2>
-            <table>
-              <tr>
-                <td>Loan Amount</td>
-                <td>{loanAmount.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Interest Rate</td>
-                <td>{this.state.interestRate}%</td>
-              </tr>
-              <tr>
-                <td>Amortization</td>
-                <td>{this.state.amortization} years</td>
-              </tr>
-              <tr>
-                <td><strong>Mortgage Payment</strong></td>
-                <td><strong>{monthlyMortgagePayment.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Loan Amount</td>
+                  <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Interest Rate</td>
+                  <td>{this.state.interestRate}%</td>
+                </tr>
+                <tr>
+                  <td>Amortization</td>
+                  <td>{this.state.amortization} years</td>
+                </tr>
+                <tr>
+                  <td><strong>Mortgage Payment</strong></td>
+                  <td><strong>{monthlyMortgagePayment.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Gross Schedule Rents</h2>
-            <table>
-              <tr>
-                <td>Rent</td>
-                <td>{this.state.monthlyRent.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Vacancy</td>
-                <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td><strong>Effective Gross Income</strong></td>
-                <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Rent</td>
+                  <td>{this.state.monthlyRent.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Vacancy</td>
+                  <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Effective Gross Income</strong></td>
+                  <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Operating Expenses</h2>
-            <table>
-              <tr>
-                <td>Taxes</td>
-                <td>{this.state.monthlyTaxes.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Insurance</td>
-                <td>{this.state.monthlyLandlordInsurance.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Maintenance</td>
-                <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Management Fee</td>
-                <td>{managementFee.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Leasing Fee</td>
-                <td>{leasingFee.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>HOA Fee</td>
-                <td>{this.state.monthlyHoaFee.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Utilities</td>
-                <td>{this.state.monthlyUtilities.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Landscaping</td>
-                <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td><strong>Total Expenses</strong></td>
-                <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Taxes</td>
+                  <td>{this.state.monthlyTaxes.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Insurance</td>
+                  <td>{this.state.monthlyLandlordInsurance.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Maintenance</td>
+                  <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Management Fee</td>
+                  <td>{managementFee.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Leasing Fee</td>
+                  <td>{leasingFee.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>HOA Fee</td>
+                  <td>{this.state.monthlyHoaFee.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Utilities</td>
+                  <td>{this.state.monthlyUtilities.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Landscaping</td>
+                  <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Total Expenses</strong></td>
+                  <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+              </table>
+            </div>
 
 
             <h2>Net Operating Income</h2>
-            <table>
-              <tr>
-                <td>Effective Gross Income</td>
-                <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Mortgage Payment</td>
-                <td>{monthlyMortgagePayment.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Total Expenses</td>
-                <td>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
-                <td><strong>{cashFlowBeforeMortage.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-              <tr>
-                <td><strong>Monthly Cash Flow After Mortgage is Paid Off</strong></td>
-                <td><strong>{cashFlowAfterMortgage.toLocaleString('en-US', currency)}</strong></td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Effective Gross Income</td>
+                  <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Mortgage Payment</td>
+                  <td>{monthlyMortgagePayment.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Total Expenses</td>
+                  <td>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
+                  <td><strong>{cashFlowBeforeMortage.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Monthly Cash Flow After Mortgage is Paid Off</strong></td>
+                  <td><strong>{cashFlowAfterMortgage.toLocaleString('en-US', currency)}</strong></td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Return On Investment</h2>
-            <table>
-              <tr>
-                <td>Annual Appreciation</td>
-                <td>{this.state.annualAppreciation}%</td>
-              </tr>
-              <tr>
-                <td>Years Owned</td>
-                <td>{this.state.yearsOwned}</td>
-              </tr>
-              <tr>
-                <td>New Construction</td>
-                <td>{newConstuction.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Under Mortgage</td>
-                <td>{underMortgage.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Paid Off</td>
-                <td>{paidOff.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Accumulated Cash Flow</td>
-                <td>{accumulatedCashFlow.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Appreciation</td>
-                <td>{appreciation.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Principal Paydown</td>
-                <td>{principalPaydown.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Selling Expenses</td>
-                <td>{sellingExpenses.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Total Projected Profit</td>
-                <td>{totalProjectedProfit.toLocaleString('en-US', currency)}</td>
-              </tr>
-              <tr>
-                <td>Annual Cash-on-Cash Return</td>
-                <td>{(annualCashOnCashReturn || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
-              </tr>
-              <tr>
-                <td>Annual Return on Investment</td>
-                <td>{annualReturnOnInvestment.toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Annual Appreciation</td>
+                  <td>{this.state.annualAppreciation}%</td>
+                </tr>
+                <tr>
+                  <td>Years Owned</td>
+                  <td>{this.state.yearsOwned}</td>
+                </tr>
+                <tr>
+                  <td>New Construction</td>
+                  <td>{newConstuction.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Under Mortgage</td>
+                  <td>{underMortgage.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Paid Off</td>
+                  <td>{paidOff.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Accumulated Cash Flow</td>
+                  <td>{accumulatedCashFlow.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Appreciation</td>
+                  <td>{appreciation.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Principal Paydown</td>
+                  <td>{principalPaydown.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Selling Expenses</td>
+                  <td>{sellingExpenses.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Total Projected Profit</td>
+                  <td>{totalProjectedProfit.toLocaleString('en-US', currency)}</td>
+                </tr>
+                <tr>
+                  <td>Annual Cash-on-Cash Return</td>
+                  <td>{(annualCashOnCashReturn || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
+                </tr>
+                <tr>
+                  <td>Annual Return on Investment</td>
+                  <td>{annualReturnOnInvestment.toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Tax Benefits</h2>
-            <table>
-              <tr>
-                <td>Annual Depreciation</td>
-                <td>{annualDepreciation.toLocaleString('en-US', currency)}</td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Annual Depreciation</td>
+                  <td>{annualDepreciation.toLocaleString('en-US', currency)}</td>
+                </tr>
+              </table>
+            </div>
 
             <h2>Cash Reserves</h2>
-            <table>
-              <tr>
-                <td>Cash Reserves</td>
-                <td>{cashReserves.toLocaleString('en-US', currency)}</td>
-              </tr>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <tr>
+                  <td>Cash Reserves</td>
+                  <td>{cashReserves.toLocaleString('en-US', currency)}</td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>
