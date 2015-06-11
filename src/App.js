@@ -186,30 +186,81 @@ export default class App extends Component {
 
     // # Charts
     var overviewData = [
-        {
-            value: loanAmount,
-            color: "#87D300",
-            highlight: "#C9EB8D",
-            label: "Loan Amount"
-        },
-        {
-            value: downPayment,
-            color:"#EE4036",
-            highlight: "#FF5D53",
-            label: "Down Payment"
-        },
-        {
-            value: this.state.rehabCost,
-            color: "#EE4036",
-            highlight: "#FF5D53",
-            label: "Rehab Cost"
-        },
-        {
-            value: closingCost,
-            color: "#EE4036",
-            highlight: "#FF5D53",
-            label: "Closing Costs"
-        }
+      {
+        value: loanAmount,
+        color: "#87D300",
+        highlight: "#C9EB8D",
+        label: "Loan Amount"
+      },
+      {
+        value: downPayment,
+        color:"#EE4036",
+        highlight: "#FF5D53",
+        label: "Down Payment"
+      },
+      {
+        value: this.state.rehabCost,
+        color: "#EE4036",
+        highlight: "#FF5D53",
+        label: "Rehab Cost"
+      },
+      {
+        value: closingCost,
+        color: "#EE4036",
+        highlight: "#FF5D53",
+        label: "Closing Costs"
+      }
+    ];
+
+    var operatingExpensesChart = [
+      {
+        value: ((this.state.monthlyTaxes / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#EE4036",
+        highlight: "#FF5D53",
+        label: "Taxes"
+      },
+      {
+        value: ((this.state.monthlyLandlordInsurance / totalMonthlyExpenses) * 100).toPrecision(3),
+        color:"#E3F14F",
+        highlight: "#A7B13A",
+        label: "Insurance"
+      },
+      {
+        value: ((monthlyMaintenance / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#186CBB",
+        highlight: "#10477B",
+        label: "Maintenance"
+      },
+      {
+        value: ((managementFee / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#04A141",
+        highlight: "#04A141",
+        label: "Management Fee"
+      },
+      {
+        value: ((leasingFee / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#F72CD1",
+        highlight: "#B7219B",
+        label: "Leasing Fee"
+      },
+      {
+        value: ((this.state.monthlyHoaFee / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#F7722C",
+        highlight: "#B75521",
+        label: "HOA Fee"
+      },
+      {
+        value: ((this.state.monthlyUtilities / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#D7265E",
+        highlight: "#971B42",
+        label: "Utilities"
+      },
+      {
+        value: ((this.state.monthlyLandscaping / totalMonthlyExpenses) * 100).toPrecision(3),
+        color: "#F1857F",
+        highlight: "#B1625D",
+        label: "Landscaping"
+      }
     ];
 
     // # Output
@@ -221,7 +272,7 @@ export default class App extends Component {
           <div className="row">
             <div className="col-lg-3" />
             <div className="col-lg-6">
-              <div className="input-group">
+              <div className="input-group input-group-lg">
                 <input ref="propertyUrl" type="text" className="form-control" placeholder="http://www.zillow.com/homes/624-vamderlyn-lane-slingerlands-ny_rb/" />
                 <span className="input-group-btn">
                   <button className="btn btn-success" type="submit">Get Financials</button>
@@ -300,10 +351,10 @@ export default class App extends Component {
               </div>
 
               <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="vacancyPercent">Avgerage Vacancy</label>
+                <label className="col-sm-6 control-label" htmlFor="vacancyPercent">Average Vacancy</label>
                 <div className="col-sm-6">
                 <div className="input-group">
-                  <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100"/>
+                  <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100" />
                   <div className="input-group-addon">%</div>
                   </div>
                 </div>
@@ -454,85 +505,113 @@ export default class App extends Component {
               </div>
             </div>
             <h2>Debt Service</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Loan Amount</td>
-                  <td>{loanAmount.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Interest Rate</td>
-                  <td>{this.state.interestRate}%</td>
-                </tr>
-                <tr>
-                  <td>Amortization</td>
-                  <td>{this.state.amortization} years</td>
-                </tr>
-                <tr>
-                  <td><strong>Mortgage Payment</strong></td>
-                  <td><strong>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</strong></td>
-                </tr>
-              </table>
+            <div className="row">
+              <div className="col-xs-6">
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                    <tr>
+                      <td>Loan Amount</td>
+                      <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Interest Rate</td>
+                      <td>{this.state.interestRate}%</td>
+                    </tr>
+                    <tr>
+                      <td>Amortization</td>
+                      <td>{this.state.amortization} years</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Mortgage Payment</strong></td>
+                      <td><strong>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="col-xs-6">
+                add mortgage iframe
+              </div>
             </div>
 
             <h2>Gross Schedule Rents</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Rent</td>
-                  <td>{this.state.monthlyRent.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Vacancy</td>
-                  <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td><strong>Effective Gross Income</strong></td>
-                  <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
-                </tr>
-              </table>
+            <div className="row">
+              <div className="col-xs-6">
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                    <tr>
+                      <td>Rent</td>
+                      <td>{this.state.monthlyRent.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Vacancy</td>
+                      <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Effective Gross Income</strong></td>
+                      <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="col-xs-6">
+                <div className="progress">
+                  <div className="progress-bar progress-bar-success" style={{width: (effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}}>
+                    <span className="sr-only">Effective Gross Income</span>
+                  </div>
+                  <div className="progress-bar progress-bar-danger" style={{width: (monthlyVacancy / this.state.monthlyRent) * 100 + '%'}}>
+                    <span className="sr-only">Monthly Vacancy</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <h2>Operating Expenses</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Taxes</td>
-                  <td>{this.state.monthlyTaxes.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Insurance</td>
-                  <td>{this.state.monthlyLandlordInsurance.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Maintenance</td>
-                  <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Management Fee</td>
-                  <td>{managementFee.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Leasing Fee</td>
-                  <td>{leasingFee.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>HOA Fee</td>
-                  <td>{this.state.monthlyHoaFee.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Utilities</td>
-                  <td>{this.state.monthlyUtilities.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Landscaping</td>
-                  <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td><strong>Total Expenses</strong></td>
-                  <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
-                </tr>
-              </table>
+            <div className="row">
+              <div className="col-xs-6">
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                    <tr>
+                      <td>Taxes</td>
+                      <td>{this.state.monthlyTaxes.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Insurance</td>
+                      <td>{this.state.monthlyLandlordInsurance.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Maintenance</td>
+                      <td>{monthlyMaintenance.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Management Fee</td>
+                      <td>{managementFee.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Leasing Fee</td>
+                      <td>{leasingFee.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>HOA Fee</td>
+                      <td>{this.state.monthlyHoaFee.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Utilities</td>
+                      <td>{this.state.monthlyUtilities.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Landscaping</td>
+                      <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Total Expenses</strong></td>
+                      <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="col-xs-6">
+              <div className="center-block text-center"><DoughnutChart data={operatingExpensesChart} height="270"/></div>
+              </div>
             </div>
 
 
