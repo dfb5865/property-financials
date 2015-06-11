@@ -29,6 +29,8 @@
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {
-    "react": "^0.13.0"
+    "chart.js": "^1.0.2",
+    "react": "^0.13.0",
+    "react-chartjs": "^0.6.0"
   }
 }
