@@ -10,7 +10,7 @@ export default class App extends Component {
     this.state = {
       // Overview
       // ========
-      purchasePrice: 89000,
+      purchasePrice: 0,
       downPaymentPercent: 25,
       rehabCost: 0,
 
@@ -21,17 +21,17 @@ export default class App extends Component {
 
       // Gross Schedule Rents
       // ====================
-      monthlyRent: 1050,
+      monthlyRent: 0,
       vacancyPercent: 13,
 
       // Operating Expenses
       // ==================
-      monthlyTaxes: 89,
-      monthlyLandlordInsurance: 111.58,
+      monthlyTaxes: 0,
+      monthlyLandlordInsurance: 0,
       monthlyHoaFee: 0,
       monthlyUtilities: 0,
       monthlyLandscaping: 0,
-      maintenancePercentage: 13,
+      maintenancePercentage: 9,
       managementFeePercentage: 8,
       propertyManagementLeasingFee: 50, // n% of 1 months rent
 
@@ -66,17 +66,19 @@ export default class App extends Component {
         return response.json();
       }).then(function(json) {
         self.setState({
+          realData: true,
           purchasePrice: parseInt(json.purchasePrice, 10),
           monthlyHoaFee: parseInt(json.monthlyHoa, 10),
-          monthlyTaxes: parseInt(json.monthlyTax, 10),
-          monthlyLandlordInsurance: parseInt(json.monthlyInsurance, 10),
+          monthlyTaxes: parseInt(json.monthlyTax / 1.5, 10),
+          monthlyLandlordInsurance: parseInt(json.monthlyInsurance / 4, 10),
           monthlyRent: parseInt(json.monthlyRent, 10),
-          annualAppreciation: parseInt(json.yearlyAppreciationRate, 10)
+          annualAppreciation: json.yearlyAppreciationRate
         })
       });
     }
     catch(e) {
       // console.log(e);
+      self.setState({realData: false});
     }
   }
 
@@ -477,8 +479,9 @@ export default class App extends Component {
         <header>
           <form onSubmit={this.loadProperty.bind(this)}>
           <div className="row">
-            <div className="col-lg-3" />
+            <div className="col-lg-3 text-left" ><img src="assets/logo.png" style={{position: 'relative', top: '-6px'}}/></div>
             <div className="col-lg-6">
+              <br />
               <div className="input-group input-group-lg">
                 <input ref="propertyUrl" type="text" className="form-control" placeholder="http://www.zillow.com/homes/624-vamderlyn-lane-slingerlands-ny_rb/" />
                 <span className="input-group-btn">
@@ -491,6 +494,7 @@ export default class App extends Component {
           </form>
         </header>
 
+        <If condition={this.state.realData}>
         <div className="row">
           <div className="col-xs-3 inverse-bg">
             <div className="center-block logo"></div>
@@ -789,7 +793,6 @@ export default class App extends Component {
               </div>
             </div>
 
-
             <h2>Net Operating Income</h2>
             <div className="row">
               <div className="col-xs-6">
@@ -907,9 +910,10 @@ export default class App extends Component {
                 </tr>
               </table>
             </div>
-
           </div>
         </div>
+
+        </If>
       </div>
     );
   }
