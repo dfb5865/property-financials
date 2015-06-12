@@ -822,7 +822,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} height="270" width="500" /></div>
+                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} options={{bezierCurve: false}} height="270" width="500" /></div>
               </div>
             </div>
 
@@ -895,7 +895,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} width="500"/></div>
+                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} options={{bezierCurve: false}} width="500"/></div>
                 <hr />
                 <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270"/></div>
               </div>
