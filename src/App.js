@@ -66,12 +66,12 @@ export default class App extends Component {
         return response.json();
       }).then(function(json) {
         self.setState({
-          purchasePrice: json.purchasePrice,
-          monthlyHoaFee: json.monthlyHoa,
-          monthlyTaxes: json.monthlyTax,
-          monthlyLandlordInsurance: json.monthlyInsurance,
-          monthlyRent: json.monthlyRent,
-          annualAppreciation: json.yearlyAppreciationRate
+          purchasePrice: parseInt(json.purchasePrice, 10),
+          monthlyHoaFee: parseInt(json.monthlyHoa, 10),
+          monthlyTaxes: parseInt(json.monthlyTax, 10),
+          monthlyLandlordInsurance: parseInt(json.monthlyInsurance, 10),
+          monthlyRent: parseInt(json.monthlyRent, 10),
+          annualAppreciation: parseInt(json.yearlyAppreciationRate, 10)
         })
       });
     }
