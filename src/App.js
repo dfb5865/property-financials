@@ -52,7 +52,7 @@ export default class App extends Component {
 
   handleChange(event) {
     var state = {};
-    state[event.target.id] = event.target.value || 0;
+    state[event.target.id] = parseFloat(event.target.value) || 0;
     this.setState(state);
   }
 
