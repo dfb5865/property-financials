@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Chart from 'react-chartjs';
+import Sticky from 'react-sticky';
 var LineChart = Chart.Line;
 var DoughnutChart = Chart.Doughnut;
 var LineChart = Chart.Line;
@@ -10,28 +11,28 @@ export default class App extends Component {
     this.state = {
       // Overview
       // ========
-      purchasePrice: 89000,
+      purchasePrice: 0,
       downPaymentPercent: 25,
       rehabCost: 0,
 
       // Debt Service
       // ============
-      interestRate: 4.375,
+      interestRate: 4.129,
       amortization: 30,
 
       // Gross Schedule Rents
       // ====================
-      monthlyRent: 1050,
+      monthlyRent: 0,
       vacancyPercent: 13,
 
       // Operating Expenses
       // ==================
-      monthlyTaxes: 89,
-      monthlyLandlordInsurance: 111.58,
+      monthlyTaxes: 0,
+      monthlyLandlordInsurance: 0,
       monthlyHoaFee: 0,
       monthlyUtilities: 0,
       monthlyLandscaping: 0,
-      maintenancePercentage: 13,
+      maintenancePercentage: 9,
       managementFeePercentage: 8,
       propertyManagementLeasingFee: 50, // n% of 1 months rent
 
@@ -66,17 +67,19 @@ export default class App extends Component {
         return response.json();
       }).then(function(json) {
         self.setState({
+          realData: true,
           purchasePrice: parseInt(json.purchasePrice, 10),
           monthlyHoaFee: parseInt(json.monthlyHoa, 10),
-          monthlyTaxes: parseInt(json.monthlyTax, 10),
-          monthlyLandlordInsurance: parseInt(json.monthlyInsurance, 10),
+          monthlyTaxes: parseInt(json.monthlyTax / 1.5, 10),
+          monthlyLandlordInsurance: parseInt(json.monthlyInsurance / 4, 10),
           monthlyRent: parseInt(json.monthlyRent, 10),
-          annualAppreciation: parseInt(json.yearlyAppreciationRate, 10)
+          annualAppreciation: json.yearlyAppreciationRate
         })
       });
     }
     catch(e) {
       // console.log(e);
+      self.setState({realData: false});
     }
   }
 
@@ -477,8 +480,9 @@ export default class App extends Component {
         <header>
           <form onSubmit={this.loadProperty.bind(this)}>
           <div className="row">
-            <div className="col-lg-3" />
+            <div className="col-lg-3 text-left" ><img src="assets/logo.png" style={{position: 'relative', top: '-6px'}}/></div>
             <div className="col-lg-6">
+              <br />
               <div className="input-group input-group-lg">
                 <input ref="propertyUrl" type="text" className="form-control" placeholder="http://www.zillow.com/homes/624-vamderlyn-lane-slingerlands-ny_rb/" />
                 <span className="input-group-btn">
@@ -491,9 +495,11 @@ export default class App extends Component {
           </form>
         </header>
 
+        <If condition={this.state.realData}>
         <div className="row">
           <div className="col-xs-3 inverse-bg">
             <div className="center-block logo"></div>
+            <Sticky stickyStyle={{width: '25%', paddingRight: '30px', position: 'fixed', marginLeft: 0, top: '15px'}}>
             <form className="form-horizontal">
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="purchasePrice">Purchase Price</label>
@@ -506,21 +512,21 @@ export default class App extends Component {
               </div>
 
               <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="downPaymentPercent">Down Payment</label>
-                <div className="col-sm-6">
-                  <div className="input-group">
-                    <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100" />
-                    <div className="input-group-addon">%</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="rehabCost">Rehab Cost</label>
                 <div className="col-sm-6">
                 <div className="input-group">
                   <div className="input-group-addon">$</div>
                   <input className="form-control" id="rehabCost" type="number" onChange={this.handleChange.bind(this)} value={this.state.rehabCost} min="0"/>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-6 control-label" htmlFor="downPaymentPercent">Down Payment</label>
+                <div className="col-sm-6">
+                  <div className="input-group">
+                    <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100" />
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -557,15 +563,7 @@ export default class App extends Component {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="vacancyPercent">Average Vacancy</label>
-                <div className="col-sm-6">
-                  <div className="input-group">
-                    <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100" />
-                    <div className="input-group-addon">%</div>
-                  </div>
-                </div>
-              </div>
+              <div className="text-center"><h5>Expenses</h5></div>
 
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="monthlyTaxes">Monthly Taxes</label>
@@ -583,26 +581,6 @@ export default class App extends Component {
                 <div className="input-group">
                   <div className="input-group-addon">$</div>
                   <input className="form-control" id="monthlyLandlordInsurance" type="number" onChange={this.handleChange.bind(this)} value={this.state.monthlyLandlordInsurance} min="0"/>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="maintenancePercentage">Average Maintenance</label>
-                <div className="col-sm-6">
-                  <div className="input-group">
-                    <input className="form-control" id="maintenancePercentage" type="number" onChange={this.handleChange.bind(this)} value={this.state.maintenancePercentage} min="0" max="100"/>
-                    <div className="input-group-addon">%</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="propertyManagementLeasingFee">Leasing Fee</label>
-                <div className="col-sm-6">
-                  <div className="input-group">
-                    <input className="form-control" id="propertyManagementLeasingFee" type="number" onChange={this.handleChange.bind(this)} value={this.state.propertyManagementLeasingFee} min="0" max="100"/>
-                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -636,7 +614,39 @@ export default class App extends Component {
                   </div>
                 </div>
               </div>
+
+              <div className="form-group">
+                <label className="col-sm-6 control-label" htmlFor="maintenancePercentage">Average Maintenance</label>
+                <div className="col-sm-6">
+                  <div className="input-group">
+                    <input className="form-control" id="maintenancePercentage" type="number" onChange={this.handleChange.bind(this)} value={this.state.maintenancePercentage} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-6 control-label" htmlFor="vacancyPercent">Average Vacancy</label>
+                <div className="col-sm-6">
+                  <div className="input-group">
+                    <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100" />
+                    <div className="input-group-addon">%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-6 control-label" htmlFor="propertyManagementLeasingFee">Leasing Fee</label>
+                <div className="col-sm-6">
+                  <div className="input-group">
+                    <input className="form-control" id="propertyManagementLeasingFee" type="number" onChange={this.handleChange.bind(this)} value={this.state.propertyManagementLeasingFee} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
+                  </div>
+                </div>
+              </div>
+
             </form>
+            </Sticky>
           </div>
           <div className="col-xs-9 light-bg">
             <div className="text-center">
@@ -704,7 +714,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                add mortgage iframe
+                <img src="assets/mortgage.png" />
               </div>
             </div>
 
@@ -789,7 +799,6 @@ export default class App extends Component {
               </div>
             </div>
 
-
             <h2>Net Operating Income</h2>
             <div className="row">
               <div className="col-xs-6">
@@ -819,7 +828,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} height="270" width="500" /></div>
+                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} options={{bezierCurve: false}} height="270" width="500" /></div>
               </div>
             </div>
 
@@ -889,15 +898,16 @@ export default class App extends Component {
                       <td className="inverse">{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
                     </tr>
                   </table>
+                  <h1>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</h1>
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} width="500"/></div>
+                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} options={{bezierCurve: false}} width="500"/></div>
                 <hr />
                 <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270"/></div>
               </div>
             </div>
-
+            {/*
             <h2>Tax Benefits</h2>
             <div className="table-responsive">
               <table className="table table-striped">
@@ -907,9 +917,11 @@ export default class App extends Component {
                 </tr>
               </table>
             </div>
-
+            */}
           </div>
         </div>
+
+        </If>
       </div>
     );
   }
