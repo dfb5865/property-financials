@@ -551,7 +551,7 @@ export default class App extends Component {
                 </div>
               </div>
 
-              <hr />
+              <hr/>
 
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="monthlyRent">Monthly Rent</label>
@@ -563,7 +563,7 @@ export default class App extends Component {
                 </div>
               </div>
 
-              <div className="text-center"><h5>Expenses</h5></div>
+              <hr/>
 
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="monthlyTaxes">Monthly Taxes</label>
@@ -898,7 +898,6 @@ export default class App extends Component {
                       <td className="inverse">{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
                     </tr>
                   </table>
-                  <h1>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</h1>
                 </div>
               </div>
               <div className="col-xs-6">
@@ -907,6 +906,9 @@ export default class App extends Component {
                 <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270"/></div>
               </div>
             </div>
+            <br/>
+            <br/>
+            <br/>
             {/*
             <h2>Tax Benefits</h2>
             <div className="table-responsive">
