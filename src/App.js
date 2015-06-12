@@ -52,7 +52,7 @@ export default class App extends Component {
 
   handleChange(event) {
     var state = {};
-    state[event.target.id] = parseInt(event.target.value, 10) || 0;
+    state[event.target.id] = event.target.value || 0;
     this.setState(state);
   }
 
@@ -172,6 +172,7 @@ export default class App extends Component {
 
     // totalProjectedProfit
     var totalProjectedProfit = accumulatedCashFlow + appreciation + principalPaydown - sellingExpenses;
+    var totalProjectedRevenue = accumulatedCashFlow + appreciation + principalPaydown;
 
     // annualCashOnCashReturn
     var annualCashOnCashReturn = 100 * (accumulatedCashFlow / investmentCapitalNeeded / this.state.yearsOwned);
@@ -279,12 +280,12 @@ export default class App extends Component {
 
       if(i < (year + 30)) {
         if(i % 3 === 0) {
-          data.push(12 * cashFlowBeforeMortgage * (i - year - 1).toPrecision(2));
+          data.push(parseInt(12 * cashFlowBeforeMortgage * (i - year - 1), 10));
         }
       }
       else {
         if(i % 3 === 0) {
-          data.push(12 * cashFlowAfterMortgage * (i - year + 30).toPrecision(2));
+          data.push(parseInt(12 * cashFlowAfterMortgage * (i - year + 30), 10));
         }
       }
     }
@@ -307,25 +308,25 @@ export default class App extends Component {
 
     var returnOnInvestmentDoughnutChart = [
       {
-        value: parseInt(accumulatedCashFlow, 10),
+        value: parseInt(accumulatedCashFlow / totalProjectedRevenue * 100, 10),
         color: "#87D300",
         highlight: "#C9EB8D",
         label: "Accumulated Cash Flow"
       },
       {
-        value: parseInt(appreciation, 10),
+        value: parseInt(appreciation / totalProjectedRevenue * 100, 10),
         color: "#87D300",
         highlight: "#C9EB8D",
         label: "Appreciation"
       },
       {
-        value: parseInt(principalPaydown, 10),
+        value: parseInt(principalPaydown / totalProjectedRevenue * 100, 10),
         color: "#87D300",
         highlight: "#C9EB8D",
         label: "Principal Paydown"
       },
       {
-        value: parseInt(sellingExpenses, 10),
+        value: parseInt(sellingExpenses / totalProjectedRevenue * 100, 10),
         color:"#EE4036",
         highlight: "#FF5D53",
         label: "Selling Expenses"
@@ -528,7 +529,7 @@ export default class App extends Component {
                 <label className="col-sm-6 control-label" htmlFor="interestRate">Interest Rate</label>
                 <div className="col-sm-6">
                   <div className="input-group">
-                    <input className="form-control" id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0" max="100"/>
+                    <input step="0.125" className="form-control" id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0" max="100"/>
                     <div className="input-group-addon">%</div>
                   </div>
                 </div>
@@ -730,10 +731,10 @@ export default class App extends Component {
               <div className="col-xs-6">
                 <div className="progress">
                   <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={(effectiveGrossIncome / this.state.monthlyRent) * 100} aria-valuemin="0" aria-valuemax="100" style={{minWidth: '2em', width: (effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}}>
-                    {(effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}
+                    {(parseInt((effectiveGrossIncome / this.state.monthlyRent) * 100, 10) || 0) + '%'}
                   </div>
                   <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={(monthlyVacancy / this.state.monthlyRent) * 100} aria-valuemin="0" aria-valuemax="100" style={{minWidth: '2em', width: (monthlyVacancy / this.state.monthlyRent) * 100 + '%'}}>
-                    {(monthlyVacancy / this.state.monthlyRent) * 100 + '%'}
+                    {(parseInt((monthlyVacancy / this.state.monthlyRent) * 100, 10) || 0) + '%'}
                   </div>
                 </div>
               </div>
