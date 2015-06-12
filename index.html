@@ -11,6 +11,10 @@
       body {
         font-family: 'Open Sans', sans-serif;
       }
+      h1 {
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 20px;
+      }
       header {
         background-color: rgba(0,116,228,1);
         margin-left: -15px;
@@ -25,7 +29,8 @@
         table-layout: fixed;
       }
       td:last-child {
-        width: 20%;
+        width: 30%;
+        text-align: right;
       }
       .logo {
         background-color: #0074e4;
@@ -52,7 +57,7 @@
         width: 100%;
       }
       .light-bg {
-        background-color: #f6f6f6;
+        background-color: #fff;
       }
       .progress {
         height: 40px;
@@ -63,6 +68,19 @@
       .progress-bar-danger {
         background-color: #EE4036
       }
+
+      .table>tbody>tr>td.inverse, .table>tbody>tr>th.inverse, .table>tfoot>tr.inverse>td, .table>tfoot>tr.inverse>th, .table>tfoot>tr>td.inverse, .table>tfoot>tr>th.inverse, .table>thead>tr.inverse>td, .table>thead>tr.inverse>th, .table>thead>tr>td.inverse, .table>thead>tr>th.inverse {
+        background-color: rgba(38, 38, 38, 0.2);
+      }
+      .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+        vertical-align: middle;
+      }
+
+      .progress-bar {
+        font-size: 24px;
+        line-height: 40px;
+      }
+
     </style>
   </head>
   <body>

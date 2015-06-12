@@ -272,9 +272,7 @@ export default class App extends Component {
     var yearlyLabels = [];
     var data = [];
 
-    console.log('year: ', year);
     for(var i = year; i < year + 50; i++) {
-      console.log(i);
       if(i % 3 === 0) {
         yearlyLabels.push(i.toString());
       }
@@ -306,9 +304,6 @@ export default class App extends Component {
         }
       ]
     };
-
-    console.log("1: ", yearlyLabels);
-    console.log("2: ", data);
 
     var returnOnInvestmentDoughnutChart = [
       {
@@ -453,7 +448,7 @@ export default class App extends Component {
         ************************************************
         ************************************************/
 
-        annualRoiData.push(annualReturnOnInvestment);
+        annualRoiData.push(annualReturnOnInvestment.toPrecision(4));
       }
     }
 
@@ -512,9 +507,9 @@ export default class App extends Component {
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="downPaymentPercent">Down Payment</label>
                 <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100"/>
-                  <div className="input-group-addon">%</div>
+                  <div className="input-group">
+                    <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -532,9 +527,9 @@ export default class App extends Component {
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="interestRate">Interest Rate</label>
                 <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0" max="100"/>
-                  <div className="input-group-addon">%</div>
+                  <div className="input-group">
+                    <input className="form-control" id="interestRate" type="number" onChange={this.handleChange.bind(this)} value={this.state.interestRate} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -564,9 +559,9 @@ export default class App extends Component {
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="vacancyPercent">Average Vacancy</label>
                 <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100" />
-                  <div className="input-group-addon">%</div>
+                  <div className="input-group">
+                    <input className="form-control" id="vacancyPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.vacancyPercent} min="0" max="100" />
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -594,9 +589,9 @@ export default class App extends Component {
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="maintenancePercentage">Average Maintenance</label>
                 <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="maintenancePercentage" type="number" onChange={this.handleChange.bind(this)} value={this.state.maintenancePercentage} min="0" max="100"/>
-                  <div className="input-group-addon">%</div>
+                  <div className="input-group">
+                    <input className="form-control" id="maintenancePercentage" type="number" onChange={this.handleChange.bind(this)} value={this.state.maintenancePercentage} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -604,9 +599,9 @@ export default class App extends Component {
               <div className="form-group">
                 <label className="col-sm-6 control-label" htmlFor="propertyManagementLeasingFee">Leasing Fee</label>
                 <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="propertyManagementLeasingFee" type="number" onChange={this.handleChange.bind(this)} value={this.state.propertyManagementLeasingFee} min="0" max="100"/>
-                  <div className="input-group-addon">%</div>
+                  <div className="input-group">
+                    <input className="form-control" id="propertyManagementLeasingFee" type="number" onChange={this.handleChange.bind(this)} value={this.state.propertyManagementLeasingFee} min="0" max="100"/>
+                    <div className="input-group-addon">%</div>
                   </div>
                 </div>
               </div>
@@ -640,41 +635,13 @@ export default class App extends Component {
                   </div>
                 </div>
               </div>
-
-              <hr />
-
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="annualAppreciation">Annual Appreciation</label>
-                <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="annualAppreciation" type="number" onChange={this.handleChange.bind(this)} value={this.state.annualAppreciation} max="100"/>
-                  <div className="input-group-addon">%</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="yearsOwned">Years of Ownership</label>
-                <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="yearsOwned" type="number" onChange={this.handleChange.bind(this)} value={this.state.yearsOwned} min="0"/>
-                  <div className="input-group-addon">Years</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-6 control-label" htmlFor="monthsOfCashReserves">Cash Reserves</label>
-                <div className="col-sm-6">
-                <div className="input-group">
-                  <input className="form-control" id="monthsOfCashReserves" type="number" onChange={this.handleChange.bind(this)} value={this.state.monthsOfCashReserves} min="0"/>
-                  <div className="input-group-addon">Months</div>
-                  </div>
-                </div>
-              </div>
             </form>
           </div>
           <div className="col-xs-9 light-bg">
+            <div className="text-center">
+              <h1>In {this.state.yearsOwned} years you will make <strong>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</strong></h1>
+            </div>
+
             <h2>Overview</h2>
             <div className="row">
               <div className="col-xs-6">
@@ -685,8 +652,8 @@ export default class App extends Component {
                       <td>{this.state.purchasePrice.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Loan Amount</td>
-                      <td>{loanAmount.toLocaleString('en-US', currency)}</td>
+                      <td className="success">Loan Amount</td>
+                      <td className="success">{loanAmount.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
                       <td>Down Payment</td>
@@ -697,16 +664,12 @@ export default class App extends Component {
                       <td>{this.state.rehabCost.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Closing Cost Percentage</td>
-                      <td>{closingCostPercentage}%</td>
-                    </tr>
-                    <tr>
-                      <td>Closing Costs</td>
+                      <td>Closing Costs ({closingCostPercentage}%)</td>
                       <td>{closingCost.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td><strong>Investment Capital Needed</strong></td>
-                      <td><strong>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</strong></td>
+                      <td className="danger"><strong>Investment Capital Needed</strong></td>
+                      <td className="danger"><strong>{investmentCapitalNeeded.toLocaleString('en-US', currency)}</strong></td>
                     </tr>
                   </table>
                 </div>
@@ -733,8 +696,8 @@ export default class App extends Component {
                       <td>{this.state.amortization} years</td>
                     </tr>
                     <tr>
-                      <td><strong>Mortgage Payment</strong></td>
-                      <td><strong>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</strong></td>
+                      <td className="danger"><strong>Mortgage Payment</strong></td>
+                      <td className="danger"><strong>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</strong></td>
                     </tr>
                   </table>
                 </div>
@@ -758,19 +721,19 @@ export default class App extends Component {
                       <td>{monthlyVacancy.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td><strong>Effective Gross Income</strong></td>
-                      <td><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
+                      <td className="success"><strong>Effective Gross Income</strong></td>
+                      <td className="success"><strong>{effectiveGrossIncome.toLocaleString('en-US', currency)}</strong></td>
                     </tr>
                   </table>
                 </div>
               </div>
               <div className="col-xs-6">
                 <div className="progress">
-                  <div className="progress-bar progress-bar-success" style={{width: (effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}}>
-                    <span className="sr-only">Effective Gross Income</span>
+                  <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={(effectiveGrossIncome / this.state.monthlyRent) * 100} aria-valuemin="0" aria-valuemax="100" style={{minWidth: '2em', width: (effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}}>
+                    {(effectiveGrossIncome / this.state.monthlyRent) * 100 + '%'}
                   </div>
-                  <div className="progress-bar progress-bar-danger" style={{width: (monthlyVacancy / this.state.monthlyRent) * 100 + '%'}}>
-                    <span className="sr-only">Monthly Vacancy</span>
+                  <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={(monthlyVacancy / this.state.monthlyRent) * 100} aria-valuemin="0" aria-valuemax="100" style={{minWidth: '2em', width: (monthlyVacancy / this.state.monthlyRent) * 100 + '%'}}>
+                    {(monthlyVacancy / this.state.monthlyRent) * 100 + '%'}
                   </div>
                 </div>
               </div>
@@ -814,8 +777,8 @@ export default class App extends Component {
                       <td>{this.state.monthlyLandscaping.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td><strong>Total Expenses</strong></td>
-                      <td><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
+                      <td className="danger"><strong>Total Expenses</strong></td>
+                      <td className="danger"><strong>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</strong></td>
                     </tr>
                   </table>
                 </div>
@@ -833,15 +796,15 @@ export default class App extends Component {
                   <table className="table table-striped">
                     <tr>
                       <td>Effective Gross Income</td>
-                      <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
+                      <td>+{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
                       <td>Mortgage Payment</td>
-                      <td>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</td>
+                      <td>-{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
                       <td>Total Expenses</td>
-                      <td>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
+                      <td>-{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
                       <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
@@ -866,51 +829,63 @@ export default class App extends Component {
                   <table className="table table-striped">
                     <tr>
                       <td>Annual Appreciation</td>
-                      <td>{this.state.annualAppreciation}%</td>
+                      <td>
+                        <div className="input-group">
+                          <input className="form-control" id="annualAppreciation" type="number" onChange={this.handleChange.bind(this)} value={this.state.annualAppreciation} />
+                          <div className="input-group-addon">%</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Years Owned</td>
-                      <td>{this.state.yearsOwned}</td>
+                      <td>
+                        <div className="input-group">
+                          <input className="form-control" id="yearsOwned" type="number" onChange={this.handleChange.bind(this)} value={this.state.yearsOwned} min="0"/>
+                          <div className="input-group-addon">Years</div>
+                        </div>
+                      </td>
                     </tr>
+                    {/*
                     <tr>
-                      <td>New Construction</td>
+                      <td>Accum. Cash Flow While New Construction</td>
                       <td>{newConstuction.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Under Mortgage</td>
+                      <td>Accum. Cash Flow While Under Mortgage</td>
                       <td>{(underMortgage || 0).toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Paid Off</td>
+                      <td>Accum. Cash Flow While Paid Off</td>
                       <td>{paidOff.toLocaleString('en-US', currency)}</td>
                     </tr>
+                    */}
                     <tr>
-                      <td>Accumulated Cash Flow</td>
-                      <td>{(accumulatedCashFlow || 0).toLocaleString('en-US', currency)}</td>
+                      <td className="success">Total Accumulated Cash Flow</td>
+                      <td className="success">{(accumulatedCashFlow || 0).toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Appreciation</td>
-                      <td>{appreciation.toLocaleString('en-US', currency)}</td>
+                      <td className="success">Appreciation</td>
+                      <td className="success">{appreciation.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Principal Paydown</td>
-                      <td>{(principalPaydown || 0).toLocaleString('en-US', currency)}</td>
+                      <td className="success">Principal Paydown</td>
+                      <td className="success">{(principalPaydown || 0).toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Selling Expenses</td>
-                      <td>{sellingExpenses.toLocaleString('en-US', currency)}</td>
+                      <td className="danger">Selling Expenses</td>
+                      <td className="danger">-{sellingExpenses.toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
-                      <td>Total Projected Profit</td>
-                      <td>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</td>
+                      <td className="info">Total Projected Profit</td>
+                      <td className="info">{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</td>
                     </tr>
                     <tr>
                       <td>Annual Cash-on-Cash Return</td>
                       <td>{(annualCashOnCashReturn || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
                     </tr>
                     <tr>
-                      <td>Annual Return on Investment</td>
-                      <td>{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
+                      <td className="inverse">Annual Return on Investment</td>
+                      <td className="inverse">{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
                     </tr>
                   </table>
                 </div>
@@ -932,15 +907,6 @@ export default class App extends Component {
               </table>
             </div>
 
-            <h2>Cash Reserves</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Cash Reserves</td>
-                  <td>{(cashReserves || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-              </table>
-            </div>
           </div>
         </div>
       </div>
