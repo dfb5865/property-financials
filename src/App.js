@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chart from 'react-chartjs';
 var LineChart = Chart.Line;
 var DoughnutChart = Chart.Doughnut;
+var LineChart = Chart.Line;
 
 export default class App extends Component {
   constructor(props) {
@@ -65,10 +66,12 @@ export default class App extends Component {
         return response.json();
       }).then(function(json) {
         self.setState({
-          purchasePrice: json.Price,
-          monthlyHoaFee: json.HoaFee,
-          monthlyTaxes: json.Tax,
-          monthlyLandlordInsurance: json.Insurance
+          purchasePrice: json.purchasePrice,
+          monthlyHoaFee: json.monthlyHoa,
+          monthlyTaxes: json.monthlyTax,
+          monthlyLandlordInsurance: json.monthlyInsurance,
+          monthlyRent: json.monthlyRent,
+          annualAppreciation: json.yearlyAppreciationRate
         })
       });
     }
@@ -139,16 +142,16 @@ export default class App extends Component {
 
     // # Net Operating Income
     // ----------------------
-    var cashFlowBeforeMortage = effectiveGrossIncome - monthlyMortgagePayment - totalMonthlyExpenses;
+    var cashFlowBeforeMortgage = effectiveGrossIncome - monthlyMortgagePayment - totalMonthlyExpenses;
     var cashFlowAfterMortgage = effectiveGrossIncome - totalMonthlyExpenses;
 
     // # Return On Investment
     // ----------------------
     // accumulatedCashFlow
     var newConstuction = 0;
-    var underMortgage = (cashFlowBeforeMortage * 12) * this.state.yearsOwned;
+    var underMortgage = (cashFlowBeforeMortgage * 12) * this.state.yearsOwned;
     if(this.state.yearsOwned > this.state.amortization) {
-      underMortgage = (cashFlowBeforeMortage * 12) * this.state.amortization;
+      underMortgage = (cashFlowBeforeMortgage * 12) * this.state.amortization;
     }
     var paidOff = (cashFlowAfterMortgage * 12) * (this.state.yearsOwned - this.state.amortization);
     if(paidOff < 0) {
@@ -262,6 +265,214 @@ export default class App extends Component {
         label: "Landscaping"
       }
     ];
+
+    var today = new Date();
+    var year = today.getUTCFullYear();
+
+    var yearlyLabels = [];
+    var data = [];
+
+    console.log('year: ', year);
+    for(var i = year; i < year + 50; i++) {
+      console.log(i);
+      if(i % 3 === 0) {
+        yearlyLabels.push(i.toString());
+      }
+
+      if(i < (year + 30)) {
+        if(i % 3 === 0) {
+          data.push(12 * cashFlowBeforeMortgage * (i - year - 1).toPrecision(2));
+        }
+      }
+      else {
+        if(i % 3 === 0) {
+          data.push(12 * cashFlowAfterMortgage * (i - year + 30).toPrecision(2));
+        }
+      }
+    }
+
+    var netOperatingIncomeChart = {
+      labels: yearlyLabels,
+      datasets: [
+        {
+          label: "Net Operating Income",
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          data: data
+        }
+      ]
+    };
+
+    console.log("1: ", yearlyLabels);
+    console.log("2: ", data);
+
+    var returnOnInvestmentDoughnutChart = [
+      {
+        value: parseInt(accumulatedCashFlow, 10),
+        color: "#87D300",
+        highlight: "#C9EB8D",
+        label: "Accumulated Cash Flow"
+      },
+      {
+        value: parseInt(appreciation, 10),
+        color: "#87D300",
+        highlight: "#C9EB8D",
+        label: "Appreciation"
+      },
+      {
+        value: parseInt(principalPaydown, 10),
+        color: "#87D300",
+        highlight: "#C9EB8D",
+        label: "Principal Paydown"
+      },
+      {
+        value: parseInt(sellingExpenses, 10),
+        color:"#EE4036",
+        highlight: "#FF5D53",
+        label: "Selling Expenses"
+      }
+    ];
+
+    var yearsHeldRoiLabels = [];
+    var annualRoiData = [];
+    for(var iter = year; iter < year + this.state.yearsOwned; iter++) {
+      if(iter % 2 === 0) {
+        yearsHeldRoiLabels.push(iter.toString());
+
+        /***********************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************/
+
+        // # Overview
+        // ----------
+        let downPayment = (this.state.purchasePrice * (this.state.downPaymentPercent / 100));
+
+        let loanAmount = this.state.purchasePrice - downPayment;
+        let closingCostPercentage = 0;
+        if(loanAmount <= 75000) {
+          closingCostPercentage = 7;
+        }
+        if(loanAmount > 75000 && loanAmount <= 87500) {
+          closingCostPercentage = 6.5
+        }
+        if(loanAmount > 87500 && loanAmount <= 100000) {
+          closingCostPercentage = 6;
+        }
+        if(loanAmount > 100000 && loanAmount <= 112500) {
+          closingCostPercentage = 5.5;
+        }
+        if(loanAmount > 112500 && loanAmount <= 125000) {
+          closingCostPercentage = 5;
+        }
+        if(loanAmount > 125000 && loanAmount <= 137500) {
+          closingCostPercentage = 4.5
+        }
+        if(loanAmount > 137500 && loanAmount <= 300000) {
+          closingCostPercentage = 4;
+        }
+        if(loanAmount > 300000) {
+          closingCostPercentage = 3.5
+        }
+
+        let closingCost = loanAmount * (closingCostPercentage / 100);
+        let investmentCapitalNeeded = downPayment + this.state.rehabCost + closingCost;
+
+        // # Debt Service
+        // --------------
+        let i = this.state.interestRate / 12 / 100;
+        let n = this.state.amortization * 12;
+
+        let numerator = i * Math.pow(1 + i, n);
+        let denominator = Math.pow(1 + i, n) - 1;
+        let monthlyMortgagePayment = loanAmount * (numerator / denominator);
+
+        // # Gross Schedule Rents
+        // ----------------------
+        let monthlyVacancy = this.state.monthlyRent * (this.state.vacancyPercent / 100);
+        let effectiveGrossIncome = this.state.monthlyRent - monthlyVacancy;
+
+        // # Operating Expenses
+        // --------------------
+        let monthlyMaintenance = this.state.monthlyRent * (this.state.maintenancePercentage / 100);
+        let managementFee = (this.state.monthlyRent - monthlyVacancy) * (this.state.managementFeePercentage / 100);
+        let leasingFee = (this.state.monthlyRent / 18) * (this.state.propertyManagementLeasingFee / 100);
+        let totalMonthlyExpenses = this.state.monthlyTaxes + this.state.monthlyLandlordInsurance + monthlyMaintenance + managementFee + leasingFee + this.state.monthlyHoaFee + this.state.monthlyUtilities + this.state.monthlyLandscaping;
+
+        // # Net Operating Income
+        // ----------------------
+        let cashFlowBeforeMortgage = effectiveGrossIncome - monthlyMortgagePayment - totalMonthlyExpenses;
+        let cashFlowAfterMortgage = effectiveGrossIncome - totalMonthlyExpenses;
+
+        // # Return On Investment
+        // ----------------------
+        // accumulatedCashFlow
+        let newConstuction = 0;
+        let underMortgage = (cashFlowBeforeMortgage * 12) * (iter - year);
+        if((iter - year) > this.state.amortization) {
+          underMortgage = (cashFlowBeforeMortgage * 12) * this.state.amortization;
+        }
+        let paidOff = (cashFlowAfterMortgage * 12) * ((iter - year) - this.state.amortization);
+        if(paidOff < 0) {
+          paidOff = 0;
+        }
+        let accumulatedCashFlow = newConstuction + underMortgage + paidOff;
+
+        // appreciation
+        let appreciation = this.state.purchasePrice * (this.state.annualAppreciation / 100) * (iter - year);
+
+        // principalPaydown
+        let interestRateForPaydown = this.state.interestRate / 12 / 100;
+        let length = Math.min((iter - year), this.state.amortization);
+        let principalPaydown = (loanAmount - (monthlyMortgagePayment / interestRateForPaydown)) * (1 - Math.pow(1 + interestRateForPaydown, length * 12));
+
+        // sellingExpenses
+        let sellingExpenses = 0.09 * (this.state.purchasePrice + appreciation);
+
+        // totalProjectedProfit
+        let totalProjectedProfit = accumulatedCashFlow + appreciation + principalPaydown - sellingExpenses;
+
+        // annualCashOnCashReturn
+        let annualCashOnCashReturn = 100 * (accumulatedCashFlow / investmentCapitalNeeded / (iter - year));
+
+        // annualReturnOnInvestment
+        let annualReturnOnInvestment = 100 * (totalProjectedProfit / investmentCapitalNeeded / (iter - year));
+
+        /***********************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************
+        ************************************************/
+
+        annualRoiData.push(annualReturnOnInvestment);
+      }
+    }
+
+
+    var returnOnInvestmentLineChart = {
+      labels: yearsHeldRoiLabels,
+      datasets: [
+        {
+          label: "Net Operating Income",
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          data: annualRoiData
+        }
+      ]
+    };
 
     // # Output
     // --------
@@ -616,83 +827,99 @@ export default class App extends Component {
 
 
             <h2>Net Operating Income</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Effective Gross Income</td>
-                  <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Mortgage Payment</td>
-                  <td>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Total Expenses</td>
-                  <td>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
-                  <td><strong>{(cashFlowBeforeMortage || 0).toLocaleString('en-US', currency)}</strong></td>
-                </tr>
-                <tr>
-                  <td><strong>Monthly Cash Flow After Mortgage is Paid Off</strong></td>
-                  <td><strong>{cashFlowAfterMortgage.toLocaleString('en-US', currency)}</strong></td>
-                </tr>
-              </table>
+            <div className="row">
+              <div className="col-xs-6">
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                    <tr>
+                      <td>Effective Gross Income</td>
+                      <td>{effectiveGrossIncome.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Mortgage Payment</td>
+                      <td>{(monthlyMortgagePayment || 0).toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Total Expenses</td>
+                      <td>{totalMonthlyExpenses.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Monthly Cash Flow Before Mortgage is Paid Off</strong></td>
+                      <td><strong>{(cashFlowBeforeMortgage || 0).toLocaleString('en-US', currency)}</strong></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Monthly Cash Flow After Mortgage is Paid Off</strong></td>
+                      <td><strong>{cashFlowAfterMortgage.toLocaleString('en-US', currency)}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="col-xs-6">
+                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} height="270" width="500" /></div>
+              </div>
             </div>
 
             <h2>Return On Investment</h2>
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <tr>
-                  <td>Annual Appreciation</td>
-                  <td>{this.state.annualAppreciation}%</td>
-                </tr>
-                <tr>
-                  <td>Years Owned</td>
-                  <td>{this.state.yearsOwned}</td>
-                </tr>
-                <tr>
-                  <td>New Construction</td>
-                  <td>{newConstuction.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Under Mortgage</td>
-                  <td>{(underMortgage || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Paid Off</td>
-                  <td>{paidOff.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Accumulated Cash Flow</td>
-                  <td>{(accumulatedCashFlow || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Appreciation</td>
-                  <td>{appreciation.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Principal Paydown</td>
-                  <td>{(principalPaydown || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Selling Expenses</td>
-                  <td>{sellingExpenses.toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Total Projected Profit</td>
-                  <td>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</td>
-                </tr>
-                <tr>
-                  <td>Annual Cash-on-Cash Return</td>
-                  <td>{(annualCashOnCashReturn || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
-                </tr>
-                <tr>
-                  <td>Annual Return on Investment</td>
-                  <td>{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
-                </tr>
-              </table>
+            <div className="row">
+              <div className="col-xs-6">
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                    <tr>
+                      <td>Annual Appreciation</td>
+                      <td>{this.state.annualAppreciation}%</td>
+                    </tr>
+                    <tr>
+                      <td>Years Owned</td>
+                      <td>{this.state.yearsOwned}</td>
+                    </tr>
+                    <tr>
+                      <td>New Construction</td>
+                      <td>{newConstuction.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Under Mortgage</td>
+                      <td>{(underMortgage || 0).toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Paid Off</td>
+                      <td>{paidOff.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Accumulated Cash Flow</td>
+                      <td>{(accumulatedCashFlow || 0).toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Appreciation</td>
+                      <td>{appreciation.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Principal Paydown</td>
+                      <td>{(principalPaydown || 0).toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Selling Expenses</td>
+                      <td>{sellingExpenses.toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Total Projected Profit</td>
+                      <td>{(totalProjectedProfit || 0).toLocaleString('en-US', currency)}</td>
+                    </tr>
+                    <tr>
+                      <td>Annual Cash-on-Cash Return</td>
+                      <td>{(annualCashOnCashReturn || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
+                    </tr>
+                    <tr>
+                      <td>Annual Return on Investment</td>
+                      <td>{(annualReturnOnInvestment || 0).toLocaleString('en-US', { maximumSignificantDigits: 3 })}%</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="col-xs-6">
+                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} width="500"/></div>
+                <hr />
+                <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270"/></div>
+              </div>
             </div>
 
             <h2>Tax Benefits</h2>
