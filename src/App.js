@@ -496,11 +496,11 @@ export default class App extends Component {
             <div className="center-block logo"></div>
             <form className="form-horizontal">
               <div className="form-group">
-                <label htmlFor="purchasePrice" className="col-sm-6 control-label">Purchase Price</label>
+                <label className="col-sm-6 control-label" htmlFor="purchasePrice">Purchase Price</label>
                 <div className="col-sm-6">
                   <div className="input-group">
                     <div className="input-group-addon">$</div>
-                    <input pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" type="text" className="form-control" id="purchasePrice" onChange={this.handleChange.bind(this).bind(this)} value={this.state.purchasePrice} min="0" />
+                    <input className="form-control" id="purchasePrice" type="number" onChange={this.handleChange.bind(this)} value={this.state.purchasePrice} min="0" />
                   </div>
                 </div>
               </div>
@@ -509,7 +509,7 @@ export default class App extends Component {
                 <label className="col-sm-6 control-label" htmlFor="downPaymentPercent">Down Payment</label>
                 <div className="col-sm-6">
                   <div className="input-group">
-                    <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100"/>
+                    <input className="form-control" id="downPaymentPercent" type="number" onChange={this.handleChange.bind(this)} value={this.state.downPaymentPercent} min="0" max="100" />
                     <div className="input-group-addon">%</div>
                   </div>
                 </div>
