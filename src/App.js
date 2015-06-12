@@ -164,6 +164,7 @@ export default class App extends Component {
 
     // appreciation
     var appreciation = this.state.purchasePrice * (this.state.annualAppreciation / 100) * this.state.yearsOwned;
+    // 530847 * (7.8 / 100) * 30
 
     // principalPaydown
     var interestRateForPaydown = this.state.interestRate / 12 / 100;
@@ -686,7 +687,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><DoughnutChart data={overviewData} height="270"/></div>
+                <div className="center-block text-center"><DoughnutChart data={overviewData} height="270" redraw /></div>
               </div>
             </div>
             <h2>Debt Service</h2>
@@ -795,7 +796,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-              <div className="center-block text-center"><DoughnutChart data={operatingExpensesChart} height="270"/></div>
+              <div className="center-block text-center"><DoughnutChart data={operatingExpensesChart} height="270" redraw /></div>
               </div>
             </div>
 
@@ -828,7 +829,7 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} options={{bezierCurve: false}} height="270" width="500" /></div>
+                <div className="center-block text-center"><h4>Accumulated Cash Flow Over Years Owned</h4><LineChart data={netOperatingIncomeChart} options={{bezierCurve: false}} height="270" width="500" redraw /></div>
               </div>
             </div>
 
@@ -901,9 +902,9 @@ export default class App extends Component {
                 </div>
               </div>
               <div className="col-xs-6">
-                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} options={{bezierCurve: false}} width="500"/></div>
+                <div className="center-block text-center"><h4>ROI Calculated Over Time</h4><LineChart data={returnOnInvestmentLineChart} options={{bezierCurve: false}} width="500" redraw /></div>
                 <hr />
-                <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270"/></div>
+                <div className="center-block text-center"><h4>Total Earnings vs Selling Fees</h4><DoughnutChart data={returnOnInvestmentDoughnutChart} height="270" redraw /></div>
               </div>
             </div>
             <br/>
